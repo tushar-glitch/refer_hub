@@ -17,7 +17,7 @@ class userController {
                 from: "tusharc20001@gmail.com",
                 to: email,
                 subject: "Verify your email",
-                html: `Your otp for verification is <a href='http://localhost:3000/api/auth/verifytoken/${id}'>http://localhost:3000/${id}</a>. This code will expire in an <b>1 hour</b>`
+                html: `Your otp for verification is <a href='https://refer-hub.onrender.com/api/auth/verifytoken/${id}'>http://localhost:3000/${id}</a>. This code will expire in an <b>1 hour</b>`
             }
             // res.status(200).json({
             //     message:"Otp sent successfully"
