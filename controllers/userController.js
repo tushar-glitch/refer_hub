@@ -4,8 +4,8 @@ const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 class userController {
-    static emailToken = async (email, id) => {
-        if (email) {
+    static emailToken = async (name, email, id) => {
+        if (email&&name) {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -17,7 +17,7 @@ class userController {
                 from: "tusharc20001@gmail.com",
                 to: email,
                 subject: "Verify your email",
-                html: `Your otp for verification is <a href='https://refer-hub.onrender.com/api/auth/verifytoken/${id}'>http://localhost:3000/${id}</a>. This code will expire in an <b>1 hour</b>`
+                html: `Hello <b>${name}</b>, <br>Thank you for registering on <b>ReferHub</b>.<br> Please click this link to verify your account - <a href='https://refer-hub.onrender.com/api/auth/verifytoken/${id}'>https://refer-hub.onrender.com/${id}</a>`
             }
             // res.status(200).json({
             //     message:"Otp sent successfully"
@@ -153,7 +153,7 @@ class userController {
                     console.log('fdasdfasfasdfasdf');
                     console.log(temp2+'temp2');
                     const save_user = await new_user.save()
-                    userController.emailToken(email, id)
+                    userController.emailToken(name,email, id)
 
                     res.status(200).json({
                         message: "A verify email has been sent to your email id!"
