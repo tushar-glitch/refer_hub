@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 class userController {
-    static emailToken = async (email,id) => {
+    static emailToken = async (email, id) => {
         if (email) {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
@@ -26,7 +26,7 @@ class userController {
         }
         else {
             res.status(400).json({
-                message:"Email is required"
+                message: "Email is required"
             })
         }
     }
@@ -35,20 +35,20 @@ class userController {
         console.log(_id);
         if (_id) {
             const isid = await auth_Model.findOne({ emailToken: _id })
-            const temp = await auth_Model.find()
-            console.dir(temp);
             if (isid) {
                 res.sendFile(__dirname + '/registrationConfirmed.html')
-                // console.log(isid);
+                await auth_Model.updateOne({ emailToken: _id }, { $set: { isverified: true } })
+                const temp = auth_Model.find()
+                console.log(temp);
             }
         }
         else {
             res.status(400).json({
-                message:"Invalid verification link!"
+                message: "Invalid verification link!"
             })
         }
     }
-    
+
     static sendotp = async (req, res) => {
         const { email } = req.body
         if (email) {
@@ -73,49 +73,49 @@ class userController {
                 expiresAt: Date.now() + 3600000
             })
             res.status(200).json({
-                message:"Otp sent successfully"
+                message: "Otp sent successfully"
             })
             await newOtpVerfication.save()
             await transporter.sendMail(mailoptions)
         }
         else {
             res.status(400).json({
-                message:"Email is required"
+                message: "Email is required"
             })
         }
     }
-    
+
     static verifyotp = async (req, res) => {
         const { email, user_otp } = req.body
         if (email && user_otp) {
             const otprecords = await otp_model.find({
-                email:email
+                email: email
             })
-            
+
             if (otprecords.length == 0) {
                 res.status(403).json({
-                    message:"Account does not exist or is already verified!"
+                    message: "Account does not exist or is already verified!"
                 })
             }
             else {
-                const expiresAt = otprecords[otprecords.length-1].expiresAt
-                const otp = otprecords[otprecords.length-1].otp
+                const expiresAt = otprecords[otprecords.length - 1].expiresAt
+                const otp = otprecords[otprecords.length - 1].otp
                 console.log(user_otp);
                 console.log(otp);
                 if (expiresAt < Date.now()) {
                     res.status(403).json({
-                        message:"Otp has expired!"
+                        message: "Otp has expired!"
                     })
                 }
                 else {
                     if (user_otp == otp) {
                         res.status(200).json({
-                            message:"Your account has been verified!"
+                            message: "Your account has been verified!"
                         })
                     }
                     else {
                         res.status(403).json({
-                            message:"Wrong otp!"
+                            message: "Wrong otp!"
                         })
                     }
                 }
@@ -123,16 +123,16 @@ class userController {
         }
         else {
             res.status(404).json({
-                message:"Please provide email and otp"
+                message: "Please provide email and otp"
             })
         }
     }
 
     static userRegistration = async (req, res) => {
         const { name, email, password, Role_id } = req.body
-        if (name&&email&&password&&Role_id) {
-            const isemail = await auth_Model.findOne({ email: email }) 
-            if (isemail) {
+        if (name && email && password && Role_id) {
+            const isemail = await auth_Model.findOne({ email: email })
+            if (!isemail) {
                 if (Role_id == 100 || Role_id == 200) {
                     const newpass = await bcrypt.hash(password, 10)
                     const id = crypto.randomBytes(128).toString("hex");
@@ -143,18 +143,25 @@ class userController {
                         contact_no: null,
                         password: newpass,
                         emailToken: id,
-                        Role_id: Role_id
+                        Role_id: Role_id,
+                        isverified: false
                     })
+                    const temp = await auth_Model.find()
+                    console.log(temp);
+                    await auth_Model.deleteMany({})
+                    const temp2 = await auth_Model.find()
+                    console.log('fdasdfasfasdfasdf');
+                    console.log(temp2+'temp2');
                     const save_user = await new_user.save()
                     userController.emailToken(email, id)
-                
+
                     res.status(200).json({
                         message: "A verify email has been sent to your email id!"
                     })
                 }
-                else{
+                else {
                     res.status(400).json({
-                        msg:"Invalid Role!"
+                        msg: "Invalid Role!"
                     })
                 }
             }
@@ -187,9 +194,9 @@ class userController {
                         "message": "Incorrect password"
                     })
                 }
-                else {   
+                else {
                     res.status(200).json({
-                        message:"Login successfull"
+                        message: "Login successfull"
                     })
                 }
             }
