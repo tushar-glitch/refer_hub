@@ -3,7 +3,8 @@ const app = express()
 const cors = require('cors')
 const auth_Model = require('./models/userModel')
 const mongoose = require('mongoose')
-const route = require('./routes/user_routes')
+const authroute = require('./routes/user_routes')
+const referralroute = require('./routes/referral_routes')
 app.use(cors())
 app.use(express.json())
 
@@ -14,6 +15,7 @@ mongoose.connect(connection_url, { useNewUrlParser: true, useUnifiedTopology: tr
     .then(() => {
         console.log("MongoDB connected");
     })
-app.use('/api/auth',route)
+app.use('/api/auth',authroute)
+app.use('/api/referral',referralroute)
 
 app.listen(3000)
