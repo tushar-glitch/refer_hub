@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 class referralController{
     static getlistofreferrals = async (req, res) => {
-        const { location, company, domain } = req.body
+        const { location, company, domain } = req.query
         var filterObj = {}
         if (location) {
             filterObj.location = location
