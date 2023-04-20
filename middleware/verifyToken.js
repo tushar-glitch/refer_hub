@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
+const jwtkey = 'randomSecretKey'
 const emailTokenVerify = async (req, res) => {
     const _id = req.params.id
     console.log(_id);
@@ -24,7 +25,7 @@ const verifytoken = (req, res, next) => {
     if (bearerheader !== undefined) {
         const tokenArr = bearerheader.split(' ')
         const token = tokenArr[1]
-        const temp = jwt.verify(token, process.env.JWT_KEY, (err, authdata) => {
+        const temp = jwt.verify(token, jwtkey, (err, authdata) => {
             if (err) {
                 res.status(400).json({
                     message: "Invalid Token"

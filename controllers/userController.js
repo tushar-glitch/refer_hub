@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv').config()
+const jwtkey = 'randomSecretKey'
 class userController {
     static emailToken = async (name, email, id) => {
         if (email&&name) {
@@ -193,7 +194,7 @@ class userController {
                     })
                 }
                 else {
-                    const jwtToken = jwt.sign({ email, password }, process.env.Jwt_KEY, { expiresIn: '3h' })
+                    const jwtToken = jwt.sign({ email, password }, jwtkey, { expiresIn: '3h' })
                     res.status(200).json({
                         message: "Login successfull",
                         token:jwtToken
