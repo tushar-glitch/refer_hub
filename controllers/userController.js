@@ -1,8 +1,11 @@
+const candidateModel = require("../models/candidatemodel")
+const refereeModel = require("../models/refereemodel")
 const auth_Model = require("../models/userModel")
-const otp_model = require("../models/otpmodel")
 const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv').config()
 class userController {
     static emailToken = async (name, email, id) => {
         if (email&&name) {
@@ -133,7 +136,7 @@ class userController {
         if (name && email && password && Role_id) {
             const isemail = await auth_Model.findOne({ email: email })
             if (!isemail) {
-                if (Role_id == 100 || Role_id == 200) {
+                if (Role_id == 100 || Role_id == 200 || Role_id == 3000) {
                     const newpass = await bcrypt.hash(password, 10)
                     const id = crypto.randomBytes(128).toString("hex");
                     const new_user = auth_Model({
@@ -147,11 +150,6 @@ class userController {
                         isverified: false
                     })
                     const temp = await auth_Model.find()
-                    console.log(temp);
-                    await auth_Model.deleteMany({})
-                    const temp2 = await auth_Model.find()
-                    console.log('fdasdfasfasdfasdf');
-                    console.log(temp2+'temp2');
                     const save_user = await new_user.save()
                     userController.emailToken(name,email, id)
 
@@ -195,8 +193,10 @@ class userController {
                     })
                 }
                 else {
+                    const jwtToken = jwt.sign({ email, password }, process.env.Jwt_KEY, { expiresIn: '3h' })
                     res.status(200).json({
-                        message: "Login successfull"
+                        message: "Login successfull",
+                        token:jwtToken
                     })
                 }
             }

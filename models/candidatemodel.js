@@ -30,5 +30,5 @@ const candidateSchema = new mongoose.Schema({
         type: Boolean,
     }
 })
-const candidateModel = mongoose.model('ReferHub-users', candidateSchema)
+const candidateModel = mongoose.model('ReferHub-users-candidate', candidateSchema)
 module.exports = candidateModel;

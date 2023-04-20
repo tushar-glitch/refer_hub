@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const auth_Model = require('./models/userModel')
 const mongoose = require('mongoose')
 const authroute = require('./routes/user_routes')
 const referralroute = require('./routes/referral_routes')

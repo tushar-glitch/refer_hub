@@ -1,9 +1,9 @@
 const express = require('express')
 const referralController = require('../controllers/referralController')
 const route = express.Router()
-const verifytokenmiddleware = require('../middleware/verifyToken')
+const {verifytoken} = require('../middleware/verifyToken')
 
-route.post('/postreferral',referralController.postreferral)
-route.get('/getreferral',referralController.getlistofreferrals)
+route.post('/postreferral', verifytoken, referralController.postreferral)
+route.get('/getreferral', verifytoken, referralController.getlistofreferrals)
 
 module.exports = route

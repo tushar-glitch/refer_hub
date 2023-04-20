@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const candidateSchema = new mongoose.Schema({
+const refereeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true 
@@ -30,5 +30,5 @@ const candidateSchema = new mongoose.Schema({
         type: Boolean,
     }
 })
-const candidateModel = mongoose.model('ReferHub-users', candidateSchema)
-module.exports = candidateModel;
+const refereeModel = mongoose.model('ReferHub-users-referee', refereeSchema)
+module.exports = refereeModel;
