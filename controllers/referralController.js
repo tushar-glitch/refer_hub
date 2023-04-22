@@ -3,6 +3,7 @@ const otp_model = require("../models/otpmodel")
 const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
+const {sendNotificationTocandidate} = require('../functions/sendNotification')
 class referralController{
     static getlistofreferrals = async (req, res) => {
         const { location, company, domain } = req.query
@@ -35,11 +36,10 @@ class referralController{
                 job_id:id
             })
             await new_referral.save()
+            sendNotificationTocandidate(location, company, domain)
             res.status(200).json({
                 msg:"New referral successfully created!"
             })
-            const temp = await referral_model.find()
-            console.log(temp);
         }
     }
 }

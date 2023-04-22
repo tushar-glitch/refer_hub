@@ -135,12 +135,13 @@ class userController {
     static userRegistration = async (req, res) => {
         const { name, email, password, Role_id } = req.body
         if (name && email && password && Role_id) {
-            const isemail = await auth_Model.findOne({ email: email })
-            if (!isemail) {
-                if (Role_id == 100 || Role_id == 200 || Role_id == 3000) {
+            const isemailInCandidate = await candidateModel.findOne({ email: email })
+            const isemailInReferee = await refereeModel.findOne({ email: email })
+            if (!isemailInCandidate&&!isemailInReferee) {
+                if (Role_id == 100) {
                     const newpass = await bcrypt.hash(password, 10)
                     const id = crypto.randomBytes(128).toString("hex");
-                    const new_user = auth_Model({
+                    const new_user = refereeModel({
                         name: name,
                         dob: null,
                         email: email,
@@ -148,12 +149,35 @@ class userController {
                         password: newpass,
                         emailToken: id,
                         Role_id: Role_id,
-                        isverified: false
+                        isverified: false,
+                        notification: [],
+                        newNotification: 0
                     })
-                    const temp = await auth_Model.find()
+                    const temp = await refereeModel.find()
                     const save_user = await new_user.save()
                     userController.emailToken(name,email, id)
-
+                    res.status(200).json({
+                        message: "A verify email has been sent to your email id!"
+                    })
+                }
+                else if (Role_id == 200) {
+                    const newpass = await bcrypt.hash(password, 10)
+                    const id = crypto.randomBytes(128).toString("hex");
+                    const new_user = candidateModel({
+                        name: name,
+                        dob: null,
+                        email: email,
+                        contact_no: null,
+                        password: newpass,
+                        emailToken: id,
+                        Role_id: Role_id,
+                        isverified: false,
+                        notification: [],
+                        newNotification: 0
+                    })
+                    const temp = await candidateModel.find()
+                    const save_user = await new_user.save()
+                    userController.emailToken(name,email, id)
                     res.status(200).json({
                         message: "A verify email has been sent to your email id!"
                     })
@@ -180,14 +204,30 @@ class userController {
     static userLogin = async (req, res) => {
         const { email, password } = req.body
         if (email && password) {
-            const isuser = await auth_Model.findOne({ email: email })
-            if (!isuser) {
+            const isUserCandidate = await candidateModel.findOne({ email: email })
+            const isUserReferee = await refereeModel.findOne({email:email})
+            if (!isUserCandidate&&!isUserReferee) {
                 res.status(403).json({
                     "message": "Email not found"
                 })
             }
-            else {
-                const ispasscorrect = await bcrypt.compare(password, isuser.password)
+            else if(!isUserCandidate) {
+                const ispasscorrect = await bcrypt.compare(password, isUserReferee.password)
+                if (!ispasscorrect) {
+                    res.status(403).json({
+                        "message": "Incorrect password"
+                    })
+                }
+                else {
+                    const jwtToken = jwt.sign({ email, password }, jwtkey, { expiresIn: '3h' })
+                    res.status(200).json({
+                        message: "Login successfull",
+                        token:jwtToken
+                    })
+                }
+            }
+            else{
+                const ispasscorrect = await bcrypt.compare(password, isUserCandidate.password)
                 if (!ispasscorrect) {
                     res.status(403).json({
                         "message": "Incorrect password"

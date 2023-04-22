@@ -28,6 +28,12 @@ const refereeSchema = new mongoose.Schema({
     },
     isverified: {
         type: Boolean,
+    },
+    notification: {
+        type: Array
+    },
+    newNotification: {
+        type: Number
     }
 })
 const refereeModel = mongoose.model('ReferHub-users-referee', refereeSchema)

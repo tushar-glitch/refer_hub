@@ -28,6 +28,12 @@ const candidateSchema = new mongoose.Schema({
     },
     isverified: {
         type: Boolean,
+    },
+    notification: {
+        type: Array
+    },
+    newNotification: {
+        type: Number
     }
 })
 const candidateModel = mongoose.model('ReferHub-users-candidate', candidateSchema)
