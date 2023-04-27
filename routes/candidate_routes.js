@@ -4,5 +4,6 @@ const {verifytoken} = require('../middleware/verifyToken')
 const candidateController = require('../controllers/candidateController')
 
 route.post('/profileques', verifytoken, candidateController.profileQues)
+route.get('/getdetails', verifytoken, candidateController.getdetailsofuser)
 
 module.exports = route
