@@ -11,12 +11,15 @@ class candidateController {
         const { domain, location, companies, minExp, maxExp } = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, jwtkey)
+        console.log(decoded);
         const candidateEmail = decoded.email
+        console.log(candidateEmail);
         const candidateUser = await candidateModel.findOneAndUpdate(
-            { candidateEmail },
+            { email: candidateEmail },
             { $set: { domain: domain, companies: companies, location: location, minExp: minExp, maxExp: maxExp } },
             { new: true }
         )
+        console.log('asdf');
         res.status(200).json({
             msg:"Answers submitted successfully!"
         })
