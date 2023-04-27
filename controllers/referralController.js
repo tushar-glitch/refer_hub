@@ -3,7 +3,9 @@ const otp_model = require("../models/otpmodel")
 const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
-const {sendNotificationTocandidate} = require('../functions/sendNotification')
+const { sendNotificationTocandidate } = require('../functions/sendNotification')
+const jwt = require('jsonwebtoken')
+const jwtkey = 'randomSecretKey'
 class referralController{
     static getlistofreferrals = async (req, res) => {
         const { location, company, domain } = req.query
@@ -33,13 +35,33 @@ class referralController{
                 job_description: job_description,
                 domain: domain,
                 endDate: endDate,
-                job_id:id
+                candidatesApplied: null,
+                referral_id:id
             })
             await new_referral.save()
             sendNotificationTocandidate(location, company, domain)
             res.status(200).json({
                 msg:"New referral successfully created!"
             })
+        }
+        else {
+            res.status(400).json({
+                msg:"Please enter all the fields!!"
+            })
+        }
+    }
+    static applyForReferral = async (req, res) => {
+        const { referral_id, reason } = req.body
+        const isRefId = await referral_model.findOne({ referral_id })
+        if (!isRefId) {
+            res.status(400).json({
+                msg:"No referral found!!"
+            })
+        }
+        else {
+            const token = req.headers.authorization.split(' ')[1]
+            const decoded = jwt.verify(token, jwtkey)
+            console.log(decoded);
         }
     }
 }

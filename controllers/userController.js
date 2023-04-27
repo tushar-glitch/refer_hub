@@ -219,7 +219,8 @@ class userController {
                     })
                 }
                 else {
-                    const jwtToken = jwt.sign({ email, password }, jwtkey, { expiresIn: '3h' })
+                    const refId = isUserReferee._id 
+                    const jwtToken = jwt.sign({ refId, email, password }, jwtkey, { expiresIn: '3h' })
                     res.status(200).json({
                         message: "Login successfull",
                         token:jwtToken

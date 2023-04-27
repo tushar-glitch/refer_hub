@@ -4,6 +4,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const authroute = require('./routes/user_routes')
 const referralroute = require('./routes/referral_routes')
+const candidateroute = require('./routes/candidate_routes')
 app.use(cors())
 app.use(express.json())
 
@@ -16,5 +17,6 @@ mongoose.connect(connection_url, { useNewUrlParser: true, useUnifiedTopology: tr
     })
 app.use('/api/auth',authroute)
 app.use('/api/referral',referralroute)
+app.use('/api/candidate',candidateroute)
 
 app.listen(3000)

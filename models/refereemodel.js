@@ -34,6 +34,9 @@ const refereeSchema = new mongoose.Schema({
     },
     newNotification: {
         type: Number
+    },
+    referrals: {
+        type: Array
     }
 })
 const refereeModel = mongoose.model('ReferHub-users-referee', refereeSchema)

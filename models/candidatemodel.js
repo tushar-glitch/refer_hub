@@ -34,6 +34,21 @@ const candidateSchema = new mongoose.Schema({
     },
     newNotification: {
         type: Number
+    },
+    domain: {
+        type: Array
+    },
+    location: {
+        type: Array
+    },
+    companies: {
+        type: Array
+    },
+    minExp: {
+        type: Number
+    },
+    maxExp: {
+        type: Number
     }
 })
 const candidateModel = mongoose.model('ReferHub-users-candidate', candidateSchema)

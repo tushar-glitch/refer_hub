@@ -26,8 +26,11 @@ const referral_schema = new mongoose.Schema({
     is_expired: {
         type: Boolean
     },
+    candidatesApplied: {
+        type: Array
+    },
     // Need to add sharing link on various social media platforms
-    job_id: {
+    referral_id: {
         type: String
     }
 })
