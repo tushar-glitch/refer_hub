@@ -65,5 +65,19 @@ class referralController{
             console.log(decoded);
         }
     }
+    static getDetailsofReferral = async (req, res) => {
+        const { referral_id } = req.params
+        const isRefId = await referral_model.findOne({ referral_id })
+        if (!isRefId) {
+            res.status(400).json({
+                msg: "No referral found!!"
+            })
+        }
+        else {
+            res.status(200).json({
+                refDetails: isRefId
+            })
+        }
+    }
 }
 module.exports = referralController
