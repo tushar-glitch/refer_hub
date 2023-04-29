@@ -8,6 +8,9 @@ const referral_schema = new mongoose.Schema({
     company: {
         type: String
     },
+    title: {
+        type: String
+    },
     job_description: {
         type: String,
         required: true

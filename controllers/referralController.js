@@ -26,12 +26,13 @@ class referralController{
         })
     }
     static postreferral = async (req, res) => {
-        const { location, job_description, company, domain, endDate } = req.body // remove company and take company from that user only
+        const { location, title, job_description, company, domain, endDate } = req.body // remove company and take company from that user only
         if (location && job_description && company && domain && endDate) {
             const id = crypto.randomBytes(64).toString("hex");
             const new_referral = referral_model({
                 company: company,          //Change when jsonwebtoken is integrated
                 location: location,
+                title: title,
                 job_description: job_description,
                 domain: domain,
                 endDate: endDate,
