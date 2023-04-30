@@ -36,7 +36,7 @@ class referralController{
                 job_description: job_description,
                 domain: domain,
                 endDate: endDate,
-                candidatesApplied: null,
+                candidatesApplied: [],
                 referral_id:id
             })
             await new_referral.save()
@@ -62,7 +62,25 @@ class referralController{
         else {
             const token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token, jwtkey)
-            console.log(decoded);
+            const userObj = {
+                email: decoded.email,
+                reason: reason
+            }
+            const update = await referral_model.findOneAndUpdate(
+                { referral_id },
+                { $push: { candidatesApplied: userObj } },
+                { new: true }
+            )
+            if (update) {
+                res.status(200).json({
+                    msg: "Referral applied successfully!"
+                })
+            }
+            else {
+                res.status(400).json({
+                    msg: "Something went wrong!"
+                })
+            }
         }
     }
     static getDetailsofReferral = async (req, res) => {
