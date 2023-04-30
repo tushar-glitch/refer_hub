@@ -37,6 +37,7 @@ class referralController{
                 domain: domain,
                 endDate: endDate,
                 candidatesApplied: [],
+                totalCandidatesApplied: 0,
                 referral_id:id
             })
             await new_referral.save()
@@ -69,6 +70,13 @@ class referralController{
             const update = await referral_model.findOneAndUpdate(
                 { referral_id },
                 { $push: { candidatesApplied: userObj } },
+                { new: true }
+            )
+            const ref = await referral_model.findOne({ referral_id })
+            var total = ref.totalCandidatesApplied
+            await referral_model.findOneAndUpdate(
+                { referral_id },
+                { $set: { totalCandidatesApplied: total+1 } },
                 { new: true }
             )
             if (update) {

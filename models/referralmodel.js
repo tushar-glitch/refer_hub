@@ -32,6 +32,9 @@ const referral_schema = new mongoose.Schema({
     candidatesApplied: {
         type: Array
     },
+    totalCandidatesApplied: {
+        type: Number
+    },
     // Need to add sharing link on various social media platforms
     referral_id: {
         type: String
