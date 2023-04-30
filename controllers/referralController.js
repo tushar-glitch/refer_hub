@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs")
 const nodemailer = require('nodemailer')
 const { sendNotificationTocandidate } = require('../functions/sendNotification')
 const jwt = require('jsonwebtoken')
+const refereeModel = require("../models/refereemodel")
 const jwtkey = 'randomSecretKey'
 class referralController{
     static getlistofreferrals = async (req, res) => {
@@ -41,7 +42,11 @@ class referralController{
                 referral_id:id
             })
             await new_referral.save()
-            sendNotificationTocandidate(location, company, domain)
+            var token = req.headers.authorization.split(' ')[1]
+            const decoded = jwt.verify(token, jwtkey)
+            const refEmail = decoded.email
+            const {name} = await refereeModel.findOne({email: refEmail})
+            sendNotificationTocandidate(name, id, location, company, domain)
             res.status(200).json({
                 msg:"New referral successfully created!"
             })

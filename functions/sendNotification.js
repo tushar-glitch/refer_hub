@@ -1,11 +1,12 @@
 const candidateModel = require('../models/candidatemodel')
-const sendNotificationTocandidate = async (location, company, domain) => {
+const sendNotificationTocandidate = async (name, id, location, company, domain) => {
     const Obj = {
+        name: name,
+        referral_id: id,
         location: location,
         company: company,
         domain:domain
     }
-    var notToUser = []
     const allusers = await candidateModel.find()
     for (let i = 0; i < allusers.length; ++i){
         var l = false;
@@ -32,11 +33,10 @@ const sendNotificationTocandidate = async (location, company, domain) => {
         if (l && c && d) {
             await candidateModel.findOneAndUpdate(
                 { email: allusers[i].email },
-                { $set: { notification: Obj } },
+                { $push: { notification: Obj } },
                 {new: true}
             )
         }
     }
-    console.log(notToUser);
 }
 module.exports = {sendNotificationTocandidate}
