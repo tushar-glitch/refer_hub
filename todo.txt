@@ -1,3 +1,0 @@
-1 - Create seperate models for referee and candidates.
-2 - Make domain in model an array.
-3 - Change no. of companies to atleast 3 while profile building questions.

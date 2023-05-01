@@ -45,7 +45,12 @@ class referralController{
             var token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token, jwtkey)
             const refEmail = decoded.email
-            const {name} = await refereeModel.findOne({email: refEmail})
+            const { name } = await refereeModel.findOne({ email: refEmail })
+            await refereeModel.findOneAndUpdate(
+                { email: refEmail },
+                { $push: { referrals: id } },
+                { new: true }
+            )
             sendNotificationTocandidate(name, id, location, company, domain)
             res.status(200).json({
                 msg:"New referral successfully created!"
@@ -109,6 +114,11 @@ class referralController{
                 refDetails: isRefId
             })
         }
+    }
+    static getListofCandidates = async (req, res) => {
+        const { referral_id } = req.params
+        const {candidatesApplied} = await referral_model.findOne({ referral_id })
+        res.status(200).json(candidatesApplied)
     }
 }
 module.exports = referralController

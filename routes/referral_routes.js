@@ -7,5 +7,6 @@ route.post('/postreferral', verifytoken, referralController.postreferral)
 route.get('/getreferral', verifytoken, referralController.getlistofreferrals)
 route.post('/applyforreferral', verifytoken, referralController.applyForReferral)
 route.get('/getonereferral/:referral_id', verifytoken, referralController.getDetailsofReferral)
+route.get('/getlist/:referral_id', verifytoken, referralController.getListofCandidates)
 
 module.exports = route
