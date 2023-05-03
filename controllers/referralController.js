@@ -120,5 +120,28 @@ class referralController{
         const {candidatesApplied} = await referral_model.findOne({ referral_id })
         res.status(200).json(candidatesApplied)
     }
+    static myReferrals = async (req, res) => {
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, jwtkey)
+        const { email } = decoded
+        const ref = await refereeModel.findOne({ email })
+        if (!ref) {
+            res.status(400).json({
+                msg: "No referee found!"
+            })
+        }
+        else {
+            const { referrals } = ref
+            var myRef = []
+            for (let i = 0; i < referrals.length; ++i){
+                const refe = referrals[i]
+                const referral = await referral_model.findOne({ refe })
+                myRef.push(referral)
+            }
+            res.status(200).json({
+                referrals: myRef
+            })
+        }
+    }
 }
 module.exports = referralController
