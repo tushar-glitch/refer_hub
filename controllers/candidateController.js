@@ -7,7 +7,6 @@ const jwtkey = 'randomSecretKey'
 const jwt = require('jsonwebtoken')
 const candidateModel = require("../models/candidatemodel")
 const multer = require('multer')
-const Document = require('./Document')
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single('resume');
