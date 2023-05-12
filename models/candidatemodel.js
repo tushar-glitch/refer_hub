@@ -49,6 +49,10 @@ const candidateSchema = new mongoose.Schema({
     },
     maxExp: {
         type: Number
+    },
+    resume: {
+        data: Buffer,
+        contentType: String
     }
 })
 const candidateModel = mongoose.model('ReferHub-users-candidate', candidateSchema)
